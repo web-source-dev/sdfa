@@ -28,7 +28,7 @@ function Toast({ message, type, onClose }: ToastProps) {
   }, [onClose]);
 
   return (
-    <div className={`rounded-md text-center shadow-lg p-4 ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'} text-white`}>
+    <div className={`rounded-md text-center shadow-lg p-2 ${type === 'success' ? 'text-green-500' : type === 'error' ? 'text-red-500' : 'text-blue-500'} `}>
       {message}
     </div>
   )
@@ -68,6 +68,18 @@ export default function BookingPage() {
   const validatePhone = (phone: string) => {
     const re = /^\+?[1-9]\d{1,14}$/
     return re.test(String(phone))
+  }
+
+  const handleBlur = (field: string) => {
+    const newErrors = { ...errors }
+    if (field === "email" && (!email || !validateEmail(email))) {
+      newErrors.email = "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+    } else if (field === "phone" && (!phone || !validatePhone(phone))) {
+      newErrors.phone = "Bitte geben Sie eine gültige Telefonnummer ein"
+    } else {
+      delete newErrors[field]
+    }
+    setErrors(newErrors)
   }
 
   const handleSubmit = async () => {
@@ -177,12 +189,24 @@ export default function BookingPage() {
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">E-Mail</label>
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ihre.email@beispiel.de" />
+                <Input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  onBlur={() => handleBlur("email")} 
+                  placeholder="ihre.email@beispiel.de" 
+                />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">Telefon</label>
-                <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+49" />
+                <Input 
+                  type="tel" 
+                  value={phone} 
+                  onChange={(e) => setPhone(e.target.value)} 
+                  onBlur={() => handleBlur("phone")} 
+                  placeholder="+49" 
+                />
                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
               </div>
               <div>
