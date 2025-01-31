@@ -28,7 +28,7 @@ function Toast({ message, type, onClose }: ToastProps) {
   }, [onClose]);
 
   return (
-    <div className={`rounded-md text-center shadow-lg ${type === 'success' ? 'text-green-500' : type === 'error' ? 'text-red-500' : 'text-blue-500'} text-white`}>
+    <div className={`rounded-md text-center shadow-lg p-4 ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'} text-white`}>
       {message}
     </div>
   )
@@ -58,12 +58,33 @@ export default function BookingPage() {
   const [message, setMessage] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null)
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return re.test(String(email).toLowerCase())
+  }
+
+  const validatePhone = (phone: string) => {
+    const re = /^\+?[1-9]\d{1,14}$/
+    return re.test(String(phone))
+  }
 
   const handleSubmit = async () => {
-    if (!date || !time || !name || !email || !phone || !message) {
-      setToast({ message: "Bitte füllen Sie alle Felder aus", type: "error" })
+    const newErrors: { [key: string]: string } = {}
+    if (!date) newErrors.date = "Bitte wählen Sie ein Datum"
+    if (!time) newErrors.time = "Bitte wählen Sie eine Uhrzeit"
+    if (!name) newErrors.name = "Bitte geben Sie Ihren Namen ein"
+    if (!email || !validateEmail(email)) newErrors.email = "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+    if (!phone || !validatePhone(phone)) newErrors.phone = "Bitte geben Sie eine gültige Telefonnummer ein"
+    if (!message) newErrors.message = "Bitte geben Sie eine Nachricht ein"
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      setToast({ message: "Bitte füllen Sie alle Felder korrekt aus", type: "error" })
       return
     }
+
     setLoading(true)
     setToast({ message: "Buchung wird verarbeitet...", type: "info" })
 
@@ -88,6 +109,7 @@ export default function BookingPage() {
         setPhone("")
         setMessage("")
         setLoading(false)
+        setErrors({})
       }, 1000)
     } catch (error) {
       console.error("Error submitting form", error)
@@ -127,6 +149,7 @@ export default function BookingPage() {
                     />
                   </PopoverContent>
                 </Popover>
+                {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">Uhrzeit auswählen</label>
@@ -143,20 +166,24 @@ export default function BookingPage() {
                     </Button>
                   ))}
                 </div>
+                {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
               </div>
             </div>
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">Name</label>
                 <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ihr vollständiger Name" />
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">E-Mail</label>
                 <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ihre.email@beispiel.de" />
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">Telefon</label>
                 <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+49" />
+                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">Nachricht (optional)</label>
@@ -166,19 +193,13 @@ export default function BookingPage() {
                   placeholder="Teilen Sie uns mit, worum es in dem Gespräch gehen soll"
                   className="min-h-[100px]"
                 />
+                {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
               </div>
             </div>
             <Button size="lg" className="w-full" onClick={handleSubmit} disabled={loading}>
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Termin buchen"}
             </Button>
-        {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-            <p className="text-sm text-muted-foreground text-center">
-              Durch die Buchung stimmen Sie unseren{" "}
-              <a href="/privacy" className="underline">
-                Datenschutzbestimmungen
-              </a>{" "}
-              zu
-            </p>
+            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
           </CardContent>
         </Card>
       </div>
