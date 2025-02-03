@@ -122,16 +122,19 @@ export default function BookingPage() {
     }
 
     try {
-      await axios.post(
+      const response = await axios.post(
         "https://consultation-ten.vercel.app/api/consultation/form/21654665456454545454758784545",
         formData,
       )
+      if(response){
+        console.log("response",response)
       setTimeout(() => {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success" })
         setLoading(false)
         setErrors({})
         setFormData(formData)
       }, 1000)
+      }
     } catch (error) {
       console.error("Error submitting form", error)
       setToast({ message: "Fehler beim Buchen des Termins", type: "error" })
