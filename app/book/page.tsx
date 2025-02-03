@@ -161,7 +161,7 @@ export default function BookingPage() {
 
     const formData = {
       date: date ? format(date, "PPP") : "",
-      time,
+      time: time || "", // Ensure time is always a string
       name,
       email,
       phone,
@@ -174,6 +174,7 @@ export default function BookingPage() {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success" })
         setLoading(false)
         setErrors({})
+        setFormData(formData) // Set form data to state
       }, 1000)
     } catch (error) {
       console.error("Error submitting form", error)
