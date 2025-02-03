@@ -1,5 +1,4 @@
-import { CalendarCheck, ExternalLink, Clock, User, Phone } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { CalendarCheck, Clock, User, Phone } from 'lucide-react'
 import { Card } from "@/components/ui/card"
 
 interface FormData {
@@ -11,7 +10,7 @@ interface FormData {
 }
 
 export default function SuccessPage({ formData }: { formData: FormData }) {
-  const { date, time, name, email, phone } = formData
+  const { date, time, name, phone } = formData
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
