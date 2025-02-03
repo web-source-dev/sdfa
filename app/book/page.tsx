@@ -58,7 +58,6 @@ function SuccessPage({ formData }: { formData: any }) {
       <Card className="relative w-full max-w-[550px] overflow-hidden p-2 mx-auto shadow-none border-none">
         <div className="flex items-center gap-2 justify-center">
           <div className="rounded-full p-1">
-            <CalendarCheck className="h-6 w-6 text-emerald-600" />
           </div>
           <h1 className="text-xl font-semibold text-emerald-600 text-center">Sie haben einen Termin</h1>
         </div>
@@ -288,4 +287,3 @@ export default function BookingPage() {
     </div>
   )
 }
-
