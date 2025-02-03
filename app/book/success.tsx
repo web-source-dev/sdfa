@@ -2,7 +2,7 @@ import { CalendarCheck, Clock, User, Phone } from 'lucide-react'
 import { Card } from "@/components/ui/card"
 
 export default function SuccessPage({ formData }: { formData: any }) {
-  const { date, time, name, email, phone } = formData
+  const { date, time, name, phone } = formData
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
