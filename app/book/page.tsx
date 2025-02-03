@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { format } from "date-fns"
-import { CalendarIcon, Clock, Loader2,CalendarCheck, User, Phone } from "lucide-react"
+import { CalendarIcon, Clock, Loader2} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
@@ -74,27 +74,23 @@ function SuccessPage({ formData }: { formData: any }) {
           
           <div className="mt-4 space-y-4">
             <div className="flex items-start gap-3">
-              <User className="mt-1 h-5 w-5 text-gray-500" />
               <div>
                 <p className="font-medium">{name}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <Clock className="mt-1 h-5 w-5 text-gray-500" />
               <div>
                 <p className="font-medium">{time}, {date}</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <Clock className="mt-1 h-5 w-5 text-gray-500" />
               <div>
                 <p className="text-sm text-gray-600">Mitteleuropäische Zeit</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
-              <Phone className="mt-1 h-5 w-5 text-gray-500" />
               <div>
                 <p className="font-medium">{phone}</p>
               </div>
