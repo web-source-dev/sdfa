@@ -11,7 +11,6 @@ import { CalendarIcon, Clock, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
-import SuccessPage from "../../pages/success" // Import SuccessPage
 
 // Custom Toast Component
 interface ToastProps {
@@ -50,18 +49,64 @@ const timeSlots = [
   "15:30",
 ]
 
-function SuccessMessage({ formData }: { formData: any }) {
+function SuccessPage({ formData }: { formData: any }) {
+  const { date, time, name, email, phone } = formData
+
   return (
-    <div className="container mx-auto px-4 py-24">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Termin erfolgreich gebucht!</h1>
-        <p className="mb-2"><strong>Datum:</strong> {formData.date}</p>
-        <p className="mb-2"><strong>Uhrzeit:</strong> {formData.time}</p>
-        <p className="mb-2"><strong>Name:</strong> {formData.name}</p>
-        <p className="mb-2"><strong>E-Mail:</strong> {formData.email}</p>
-        <p className="mb-2"><strong>Telefon:</strong> {formData.phone}</p>
-        <p className="mb-2"><strong>Nachricht:</strong> {formData.message}</p>
-      </div>
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <Card className="relative w-full max-w-[550px] overflow-hidden p-2 mx-auto shadow-none border-none">
+        <div className="flex items-center gap-2 justify-center">
+          <div className="rounded-full p-1">
+            <CalendarCheck className="h-6 w-6 text-emerald-600" />
+          </div>
+          <h1 className="text-xl font-semibold text-emerald-600 text-center">Sie haben einen Termin</h1>
+        </div>
+
+        <p className="mt-2 text-sm text-gray-600 text-center">
+          Eine Kalendereinladung wurde an Ihre E-Mail-Adresse gesendet.
+        </p>
+
+        <div className="mt-6 p-6 border border-gray-200 rounded-lg w-full">
+          <h2 className="text-lg flex items-start font-semibold text-center">
+            Unverbindliches Vorgespräch mit Coach Kai
+          </h2>
+          
+          <div className="mt-4 space-y-4">
+            <div className="flex items-start gap-3">
+              <User className="mt-1 h-5 w-5 text-gray-500" />
+              <div>
+                <p className="font-medium">{name}</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Clock className="mt-1 h-5 w-5 text-gray-500" />
+              <div>
+                <p className="font-medium">{time}, {date}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Clock className="mt-1 h-5 w-5 text-gray-500" />
+              <div>
+                <p className="text-sm text-gray-600">Mitteleuropäische Zeit</p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Phone className="mt-1 h-5 w-5 text-gray-500" />
+              <div>
+                <p className="font-medium">{phone}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="mt-2 text-sm text-gray-600">
+            Vermeiden Sie ewiges Hin und Her per E-Mail um eine Zeit zu finden.
+          </p>
+        </div>
+      </Card>
     </div>
   )
 }
