@@ -1,3 +1,5 @@
+"use client"
+
 import { CalendarCheck, Clock, User, Phone } from 'lucide-react'
 import { Card } from "@/components/ui/card"
 
