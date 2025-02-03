@@ -11,7 +11,7 @@ import { CalendarIcon, Clock, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
-import SuccessPage, { Toast } from "./submit"
+import SuccessPage, { Toast } from "./success"
 
 interface FormData {
   date: string
