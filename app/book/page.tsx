@@ -11,25 +11,35 @@ import { CalendarIcon, Clock, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
-import SuccessPage from "./success" // Import SuccessPage
+import SuccessPage from "./success"
 
-// Custom Toast Component
+interface FormData {
+  date: string
+  time: string
+  name: string
+  email: string
+  phone: string
+  message: string
+}
+
 interface ToastProps {
-  message: string;
-  type: 'success' | 'error' | 'info';
-  onClose: () => void;
+  message: string
+  type: "success" | "error" | "info"
+  onClose: () => void
 }
 
 function Toast({ message, type, onClose }: ToastProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      onClose();
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+      onClose()
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [onClose])
 
   return (
-    <div className={`rounded-md text-center shadow-lg p-2 ${type === 'success' ? 'text-green-500' : type === 'error' ? 'text-red-500' : 'text-blue-500'} `}>
+    <div
+      className={`rounded-md text-center shadow-lg p-2 ${type === "success" ? "text-green-500" : type === "error" ? "text-red-500" : "text-blue-500"} `}
+    >
       {message}
     </div>
   )
@@ -49,17 +59,18 @@ const timeSlots = [
   "15:00",
   "15:30",
 ]
+
 export default function BookingPage() {
-  const [date, setDate] = useState<Date>()
-  const [time, setTime] = useState<string>()
+  const [date, setDate] = useState<Date | undefined>()
+  const [time, setTime] = useState<string | undefined>()
   const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
   const [phone, setPhone] = useState<string>("")
   const [message, setMessage] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
-  const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null)
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [formData, setFormData] = useState<any>(null)
+  const [formData, setFormData] = useState<FormData | null>(null)
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -101,9 +112,9 @@ export default function BookingPage() {
     setLoading(true)
     setToast({ message: "Buchung wird verarbeitet...", type: "info" })
 
-    const formData = {
+    const formData: FormData = {
       date: date ? format(date, "PPP") : "",
-      time,
+      time: time || "",
       name,
       email,
       phone,
@@ -111,12 +122,15 @@ export default function BookingPage() {
     }
 
     try {
-      await axios.post("https://consultation-ten.vercel.app/api/consultation/form/21654665456454545454758784545", formData)
+      await axios.post(
+        "https://consultation-ten.vercel.app/api/consultation/form/21654665456454545454758784545",
+        formData,
+      )
       setTimeout(() => {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success" })
         setLoading(false)
         setErrors({})
-        setFormData(formData) // Set form data to state
+        setFormData(formData)
       }, 1000)
     } catch (error) {
       console.error("Error submitting form", error)
@@ -188,23 +202,23 @@ export default function BookingPage() {
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">E-Mail</label>
-                <Input 
-                  type="email" 
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  onBlur={() => handleBlur("email")} 
-                  placeholder="ihre.email@beispiel.de" 
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={() => handleBlur("email")}
+                  placeholder="ihre.email@beispiel.de"
                 />
                 {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">Telefon</label>
-                <Input 
-                  type="tel" 
-                  value={phone} 
-                  onChange={(e) => setPhone(e.target.value)} 
-                  onBlur={() => handleBlur("phone")} 
-                  placeholder="+49" 
+                <Input
+                  type="tel"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  onBlur={() => handleBlur("phone")}
+                  placeholder="+49"
                 />
                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
               </div>
@@ -229,4 +243,6 @@ export default function BookingPage() {
     </div>
   )
 }
+
+
 
