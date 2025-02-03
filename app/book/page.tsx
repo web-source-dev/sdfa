@@ -50,7 +50,7 @@ const timeSlots = [
   "15:30",
 ]
 
-function SuccessPage({ formData }: { formData: any }) {
+function SuccessPage({ formData }: { formData: { date: string, time: string, name: string, phone: string } }) {
   const { date, time, name, phone } = formData
 
   return (
@@ -117,7 +117,7 @@ export default function BookingPage() {
   const [loading, setLoading] = useState<boolean>(false)
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [formData, setFormData] = useState<any>(null)
+  const [formData, setFormData] = useState<{ date: string, time: string, name: string, email: string, phone: string, message: string } | null>(null)
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -174,7 +174,6 @@ export default function BookingPage() {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success" })
         setLoading(false)
         setErrors({})
-        setFormData(formData) // Set form data to state
       }, 1000)
     } catch (error) {
       console.error("Error submitting form", error)
