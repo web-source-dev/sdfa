@@ -7,11 +7,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { format } from "date-fns"
-import { CalendarIcon, Clock, Loader2} from "lucide-react"
+import { CalendarIcon, Clock, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
-
+import SuccessPage from "./success" // Import SuccessPage
 
 // Custom Toast Component
 interface ToastProps {
@@ -49,64 +49,6 @@ const timeSlots = [
   "15:00",
   "15:30",
 ]
-
-function SuccessPage({ formData }: { formData: { date: string, time: string, name: string, phone: string } }) {
-  const { date, time, name, phone } = formData
-
-  return (
-    <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="relative w-full max-w-[550px] overflow-hidden p-2 mx-auto shadow-none border-none">
-        <div className="flex items-center gap-2 justify-center">
-          <div className="rounded-full p-1">
-          </div>
-          <h1 className="text-xl font-semibold text-emerald-600 text-center">Sie haben einen Termin</h1>
-        </div>
-
-        <p className="mt-2 text-sm text-gray-600 text-center">
-          Eine Kalendereinladung wurde an Ihre E-Mail-Adresse gesendet.
-        </p>
-
-        <div className="mt-6 p-6 border border-gray-200 rounded-lg w-full">
-          <h2 className="text-lg flex items-start font-semibold text-center">
-            Unverbindliches Vorgespräch mit Coach Kai
-          </h2>
-          
-          <div className="mt-4 space-y-4">
-            <div className="flex items-start gap-3">
-              <div>
-                <p className="font-medium">{name}</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div>
-                <p className="font-medium">{time}, {date}</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div>
-                <p className="text-sm text-gray-600">Mitteleuropäische Zeit</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <div>
-                <p className="font-medium">{phone}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-8 text-center">
-          <p className="mt-2 text-sm text-gray-600">
-            Vermeiden Sie ewiges Hin und Her per E-Mail um eine Zeit zu finden.
-          </p>
-        </div>
-      </Card>
-    </div>
-  )
-}
-
 export default function BookingPage() {
   const [date, setDate] = useState<Date>()
   const [time, setTime] = useState<string>()
@@ -117,7 +59,7 @@ export default function BookingPage() {
   const [loading, setLoading] = useState<boolean>(false)
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [formData, setFormData] = useState<{ date: string, time: string, name: string, email: string, phone: string, message: string } | null>(null)
+  const [formData, setFormData] = useState<any>(null)
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -161,7 +103,7 @@ export default function BookingPage() {
 
     const formData = {
       date: date ? format(date, "PPP") : "",
-      time: time || "", // Ensure time is always a string
+      time,
       name,
       email,
       phone,
@@ -169,7 +111,7 @@ export default function BookingPage() {
     }
 
     try {
-      await axios.post("https://consultaionwforms.vercel.app/api/consultation/form/21654665456454545454758784545", formData)
+      await axios.post("https://consultation-ten.vercel.app/api/consultation/form/21654665456454545454758784545", formData)
       setTimeout(() => {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success" })
         setLoading(false)
@@ -287,3 +229,4 @@ export default function BookingPage() {
     </div>
   )
 }
+
