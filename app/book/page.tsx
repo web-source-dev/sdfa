@@ -11,7 +11,7 @@ import { CalendarIcon, Clock, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
-import SuccessPage from "./success"
+import SuccessPage, { Toast } from "./submit"
 
 interface FormData {
   date: string
@@ -20,29 +20,6 @@ interface FormData {
   email: string
   phone: string
   message: string
-}
-
-interface ToastProps {
-  message: string
-  type: "success" | "error" | "info"
-  onClose: () => void
-}
-
-function Toast({ message, type, onClose }: ToastProps) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose()
-    }, 3000)
-    return () => clearTimeout(timer)
-  }, [onClose])
-
-  return (
-    <div
-      className={`rounded-md text-center shadow-lg p-2 ${type === "success" ? "text-green-500" : type === "error" ? "text-red-500" : "text-blue-500"} `}
-    >
-      {message}
-    </div>
-  )
 }
 
 const timeSlots = [
@@ -60,6 +37,12 @@ const timeSlots = [
   "15:30",
 ]
 
+interface ToastProps {
+  message: string
+  type: "success" | "error" | "info"
+  onClose: () => void
+}
+
 export default function BookingPage() {
   const [date, setDate] = useState<Date | undefined>()
   const [time, setTime] = useState<string | undefined>()
@@ -68,9 +51,10 @@ export default function BookingPage() {
   const [phone, setPhone] = useState<string>("")
   const [message, setMessage] = useState<string>("")
   const [loading, setLoading] = useState<boolean>(false)
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null)
+  const [toast, setToast] = useState<ToastProps | null>(null)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [formData, setFormData] = useState<FormData | null>(null)
+  const [step, setStep] = useState<number>(1)
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -94,6 +78,44 @@ export default function BookingPage() {
     setErrors(newErrors)
   }
 
+  const handleNext = () => {
+    setLoading(true)
+    setTimeout(() => {
+      const newErrors: { [key: string]: string } = {}
+      if (!date) newErrors.date = "Bitte wählen Sie ein Datum"
+      if (!time) newErrors.time = "Bitte wählen Sie eine Uhrzeit"
+      if (!name) newErrors.name = "Bitte geben Sie Ihren Namen ein"
+      if (!email || !validateEmail(email)) newErrors.email = "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+      if (!phone || !validatePhone(phone)) newErrors.phone = "Bitte geben Sie eine gültige Telefonnummer ein"
+      if (!message) newErrors.message = "Bitte geben Sie eine Nachricht ein"
+
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors)
+        setLoading(false)
+        return
+      }
+      const formData: FormData = {
+        date: date ? format(date, "PPP") : "",
+        time: time || "",
+        name,
+        email,
+        phone,
+        message,
+      }
+      setFormData(formData)
+      setStep(2)
+      setLoading(false)
+    }, 1000)
+  }
+
+  const handleBack = () => {
+    setLoading(true)
+    setTimeout(() => {
+      setStep(1)
+      setLoading(false)
+    }, 1000)
+  }
+
   const handleSubmit = async () => {
     const newErrors: { [key: string]: string } = {}
     if (!date) newErrors.date = "Bitte wählen Sie ein Datum"
@@ -105,12 +127,12 @@ export default function BookingPage() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
-      setToast({ message: "Bitte füllen Sie alle Felder korrekt aus", type: "error" })
+      setToast({ message: "Bitte füllen Sie alle Felder korrekt aus", type: "error", onClose: () => setToast(null) })
       return
     }
 
     setLoading(true)
-    setToast({ message: "Buchung wird verarbeitet...", type: "info" })
+    setToast({ message: "Buchung wird verarbeitet...", type: "info", onClose: () => setToast(null) })
 
     const formData: FormData = {
       date: date ? format(date, "PPP") : "",
@@ -129,7 +151,7 @@ export default function BookingPage() {
       if(response){
         console.log("response",response)
       setTimeout(() => {
-        setToast({ message: "Termin erfolgreich gebucht!", type: "success" })
+        setToast({ message: "Termin erfolgreich gebucht!", type: "success", onClose: () => setToast(null) })
         setLoading(false)
         setErrors({})
         setFormData(formData)
@@ -137,13 +159,13 @@ export default function BookingPage() {
       }
     } catch (error) {
       console.error("Error submitting form", error)
-      setToast({ message: "Fehler beim Buchen des Termins", type: "error" })
+      setToast({ message: "Fehler beim Buchen des Termins", type: "error", onClose: () => setToast(null) })
       setLoading(false)
     }
   }
 
-  if (formData) {
-    return <SuccessPage formData={formData} />
+  if (step === 2 && formData) {
+    return <SuccessPage formData={formData} onSubmit={handleSubmit} onBack={handleBack} toast={toast} />
   }
 
   return (
@@ -236,8 +258,8 @@ export default function BookingPage() {
                 {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
               </div>
             </div>
-            <Button size="lg" className="w-full" onClick={handleSubmit} disabled={loading}>
-              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Termin buchen"}
+            <Button size="lg" className="w-full" onClick={handleNext} disabled={loading}>
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Weiter"}
             </Button>
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
           </CardContent>
