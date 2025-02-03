@@ -1,5 +1,7 @@
-import { CalendarCheck, Clock, User, Phone } from 'lucide-react'
+import { CalendarCheck, Clock, User, Phone, Loader2 } from 'lucide-react'
 import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { useState, useEffect } from 'react'
 
 interface FormData {
   date: string;
@@ -9,12 +11,60 @@ interface FormData {
   phone: string;
 }
 
-export default function SuccessPage({ formData }: { formData: FormData }) {
+interface ToastProps {
+  message: string
+  type: "success" | "error" | "info"
+  onClose: () => void
+}
+
+export function Toast({ message, type, onClose }: ToastProps) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose()
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [onClose])
+
+  return (
+    <div
+      className={`rounded-md text-center p-2 ${type === "success" ? "text-green-500" : type === "error" ? "text-red-500" : "text-blue-500"} `}
+    >
+      {message}
+    </div>
+  )
+}
+
+export default function SuccessPage({ formData, onSubmit, onBack, toast }: { formData: FormData, onSubmit: () => void, onBack: () => void, toast: ToastProps | null }) {
   const { date, time, name, phone } = formData
+  const [loadingSubmit, setLoadingSubmit] = useState<boolean>(false)
+  const [loadingBack, setLoadingBack] = useState<boolean>(false)
+  const [showDialog, setShowDialog] = useState<boolean>(false)
+
+  const handleSubmit = async () => {
+    setLoadingSubmit(true)
+    await onSubmit()
+    setLoadingSubmit(false)
+    setShowDialog(true)
+  }
+
+  const handleBack = () => {
+    setLoadingBack(true)
+    setTimeout(() => {
+      onBack()
+      setLoadingBack(false)
+    }, 1000)
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
-      <Card className="relative w-full max-w-[550px] overflow-hidden p-2 mx-auto shadow-none border-none">
+      <Card className="relative w-full max-w-[550px] overflow-hidden p-4 mx-auto shadow-none border-none">
+        
+        {/* Back Button */}
+        <div className="mb-10">
+          <Button variant="outline" className="w-50" onClick={handleBack} disabled={loadingBack}>
+            {loadingBack ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Zurück"}
+          </Button>
+        </div>
         <div className="flex items-center gap-2 justify-center">
           <div className="rounded-full p-1">
             <CalendarCheck className="h-6 w-6 text-emerald-600" />
@@ -60,14 +110,35 @@ export default function SuccessPage({ formData }: { formData: FormData }) {
             </div>
           </div>
         </div>
+        
+        <p className="mt-6 text-sm text-gray-600 text-center">
+          Eine Kalendereinladung wurde an Ihre E-Mail-Adresse gesendet.
+        </p>
+        
+        <p className="mt-6 text-sm text-gray-600 text-center">
+          Eine Kalendereinladung wurde an Ihre E-Mail-Adresse gesendet.
+        </p>
 
-        <div className="mt-8 text-center">
-          <p className="mt-2 text-sm text-gray-600">
-            Vermeiden Sie ewiges Hin und Her per E-Mail um eine Zeit zu finden.
-          </p>
+        {/* Submit Button */}
+        <div className="mt-6">
+          <Button className="w-full" onClick={handleSubmit} disabled={loadingSubmit}>
+            {loadingSubmit ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Daten einreichen"}
+          </Button>
         </div>
+
+        {/* Toast */}
+        {toast && <div className="mt-4"><Toast message={toast.message} type={toast.type} onClose={toast.onClose} /></div>}
       </Card>
+
+      {showDialog && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-xl font-semibold">Buchung erfolgreich</h2>
+            <p className="mt-2">Ihre Buchung war erfolgreich. Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
+            <Button className="mt-4 w-full" onClick={() => setShowDialog(false)}>Schließen</Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
-
