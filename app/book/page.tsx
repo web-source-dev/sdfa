@@ -7,11 +7,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Calendar } from "@/components/ui/calendar"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { format } from "date-fns"
-import { CalendarIcon, Clock, Loader2 } from "lucide-react"
+import { CalendarIcon, Clock, Loader2,CalendarCheck, User, Phone } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
-import { CalendarCheck, User, Phone } from "lucide-react";
 
 
 // Custom Toast Component
@@ -52,7 +51,7 @@ const timeSlots = [
 ]
 
 function SuccessPage({ formData }: { formData: any }) {
-  const { date, time, name, email, phone } = formData
+  const { date, time, name, phone } = formData
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
