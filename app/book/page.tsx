@@ -11,7 +11,7 @@ import { CalendarIcon, Clock, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
-import SuccessPage from "@/pages/success" // Import SuccessPage
+import SuccessPage from "../../pages/success" // Import SuccessPage
 
 // Custom Toast Component
 interface ToastProps {
@@ -128,7 +128,7 @@ export default function BookingPage() {
     }
 
     try {
-      await axios.post("http://localhost:5000/api/consultation/form/21654665456454545454758784545", formData)
+      await axios.post("https://consultaionwforms.vercel.app/api/consultation/form/21654665456454545454758784545", formData)
       setTimeout(() => {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success" })
         setLoading(false)
