@@ -56,7 +56,7 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="flex min-h-screen items-start justify-start mt-10 p-4">
       <Card className="relative w-full max-w-[550px] overflow-hidden p-4 mx-auto shadow-none border-none">
         
         {/* Back Button */}
