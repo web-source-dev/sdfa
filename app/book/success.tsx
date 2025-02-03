@@ -13,7 +13,7 @@ export default function SuccessPage({ formData }: { formData: FormData }) {
   const { date, time, name, phone } = formData
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="flex min-h-screen items-start justify-start p-4">
       <Card className="relative w-full max-w-[550px] overflow-hidden p-2 mx-auto shadow-none border-none">
         <div className="flex items-center gap-2 justify-center">
           <div className="rounded-full p-1">
