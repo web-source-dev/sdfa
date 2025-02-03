@@ -11,6 +11,7 @@ import { CalendarIcon, Clock, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import axios from "axios"
+import SuccessPage from "@/pages/success" // Import SuccessPage
 
 // Custom Toast Component
 interface ToastProps {
@@ -49,6 +50,22 @@ const timeSlots = [
   "15:30",
 ]
 
+function SuccessMessage({ formData }: { formData: any }) {
+  return (
+    <div className="container mx-auto px-4 py-24">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-2xl font-bold mb-4">Termin erfolgreich gebucht!</h1>
+        <p className="mb-2"><strong>Datum:</strong> {formData.date}</p>
+        <p className="mb-2"><strong>Uhrzeit:</strong> {formData.time}</p>
+        <p className="mb-2"><strong>Name:</strong> {formData.name}</p>
+        <p className="mb-2"><strong>E-Mail:</strong> {formData.email}</p>
+        <p className="mb-2"><strong>Telefon:</strong> {formData.phone}</p>
+        <p className="mb-2"><strong>Nachricht:</strong> {formData.message}</p>
+      </div>
+    </div>
+  )
+}
+
 export default function BookingPage() {
   const [date, setDate] = useState<Date>()
   const [time, setTime] = useState<string>()
@@ -59,6 +76,7 @@ export default function BookingPage() {
   const [loading, setLoading] = useState<boolean>(false)
   const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' | 'info' } | null>(null)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
+  const [formData, setFormData] = useState<any>(null)
 
   const validateEmail = (email: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -110,18 +128,12 @@ export default function BookingPage() {
     }
 
     try {
-      await axios.post("https://consultation-ten.vercel.app/api/consultation/form/21654665456454545454758784545", formData)
+      await axios.post("http://localhost:5000/api/consultation/form/21654665456454545454758784545", formData)
       setTimeout(() => {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success" })
-        // Clear the fields after submission
-        setDate(undefined)
-        setTime("")
-        setName("")
-        setEmail("")
-        setPhone("")
-        setMessage("")
         setLoading(false)
         setErrors({})
+        setFormData(formData) // Set form data to state
       }, 1000)
     } catch (error) {
       console.error("Error submitting form", error)
@@ -130,8 +142,12 @@ export default function BookingPage() {
     }
   }
 
+  if (formData) {
+    return <SuccessPage formData={formData} />
+  }
+
   return (
-    <div className="container mx-auto px-4 py-24">
+    <div className="container mx-auto px-4 py-4">
       <div className="relative max-w-4xl mx-auto">
         <Card>
           <CardHeader>
