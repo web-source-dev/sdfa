@@ -112,11 +112,7 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
         </div>
         
         <p className="mt-6 text-sm text-gray-600 text-center">
-          Eine Kalendereinladung wurde an Ihre E-Mail-Adresse gesendet.
-        </p>
-        
-        <p className="mt-6 text-sm text-gray-600 text-center">
-          Eine Kalendereinladung wurde an Ihre E-Mail-Adresse gesendet.
+        Bevor Sie Ihre Buchung abschließen, lesen Sie bitte unsere Datenschutzrichtlinie, Cookie-Richtlinie und Allgemeinen Geschäftsbedingungen. Wir verwenden Cookies, um Ihre Erfahrung zu verbessern und sichere Transaktionen zu gewährleisten. Ihre Daten werden gemäß unseren Richtlinien geschützt und verarbeitet. Mit dem Fortfahren bestätigen Sie Ihr Einverständnis mit unseren Bedingungen.
         </p>
 
         {/* Submit Button */}
