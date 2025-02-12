@@ -111,42 +111,28 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
           </div>
         </div>
                 <p className="mt-6 text-sm text-gray-600 text-center">
-  Bevor Sie Ihre Buchung abschließen, lesen Sie bitte unsere{" "}
-  <a
+  Bevor Sie Ihre Buchung abschließen, lesen Sie bitte unsere{" "} <a
+  href="https://sascharoemer.wixsite.com/my-site-4/datenschutz"
   className="text-blue-600 underline"
-  onClick={(e) => {
-    e.preventDefault();
-    if (typeof window !== "undefined" && window.top) {
-      window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/datenschutz";
-    }
-  }}
+  target="_top"
+  rel="noopener noreferrer"
 >
   Datenschutz
-</a>
-,{" "}
-<a
+</a><a
+  href="https://sascharoemer.wixsite.com/my-site-4/impressum"
   className="text-blue-600 underline"
-  onClick={(e) => {
-    e.preventDefault();
-    if (typeof window !== "undefined" && window.top) {
-      window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/impressum";
-    }
-  }}
+  target="_top"
+  rel="noopener noreferrer"
 >
   Impressum
-</a>
-,{" "}
-<a
+</a><a
+  href="https://sascharoemer.wixsite.com/my-site-4/agb"
   className="text-blue-600 underline"
-  onClick={(e) => {
-    e.preventDefault();
-    if (typeof window !== "undefined" && window.top) {
-      window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/agb";
-    }
-  }}
+  target="_top"
+  rel="noopener noreferrer"
 >
   Allgemeinen Geschäftsbedingungen
-</a>.
+</a>
   Wir verwenden Cookies, um Ihre Erfahrung zu verbessern und sichere Transaktionen zu gewährleisten.  
   Ihre Daten werden gemäß unseren Richtlinien geschützt und verarbeitet. Mit dem Fortfahren bestätigen Sie Ihr Einverständnis mit unseren Bedingungen.
 </p>
@@ -170,11 +156,9 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
             <Button 
   className="mt-4 w-full" 
 onClick={() => {
-  setShowDialog(false); // Close the dialog
-  if (typeof window !== "undefined" && window.top) {
-    window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/"; // Redirect
-  }
-}}
+  setShowDialog(false);
+  window.parent.postMessage({ type: "redirect", url: "https://sascharoemer.wixsite.com/my-site-4" }, "*");
+}};
   >
   Schließen
 </Button>
