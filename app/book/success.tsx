@@ -118,7 +118,6 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
   Wir verwenden Cookies, um Ihre Erfahrung zu verbessern und sichere Transaktionen zu gewährleisten.  
   Ihre Daten werden gemäß unseren Richtlinien geschützt und verarbeitet. Mit dem Fortfahren bestätigen Sie Ihr Einverständnis mit unseren Bedingungen.
 </p>
-
         {/* Submit Button */}
         <div className="mt-6">
           <Button className="w-full" onClick={handleSubmit} disabled={loadingSubmit}>
@@ -140,7 +139,7 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
 onClick={() => {
   setShowDialog(false);
   window.parent.postMessage({ type: "redirect", url: "https://sascharoemer.wixsite.com/my-site-4" }, "*");
-}};
+}}
   >
   Schließen
 </Button>
