@@ -112,9 +112,38 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
         </div>
                 <p className="mt-6 text-sm text-gray-600 text-center">
   Bevor Sie Ihre Buchung abschließen, lesen Sie bitte unsere{" "}
-  <a href="https://sascharoemer.wixsite.com/my-site-4/datenschutz" className="text-blue-600 underline">Datenschutz</a>,{" "}
-  <a href="https://sascharoemer.wixsite.com/my-site-4/impressum" className="text-blue-600 underline">Impressum</a> und{" "}
-  <a href="https://sascharoemer.wixsite.com/my-site-4/agb" className="text-blue-600 underline">Allgemeinen Geschäftsbedingungen</a>.  
+                  <a 
+  href="#" 
+  className="text-blue-600 underline" 
+  onClick={(e) => {
+    e.preventDefault();
+    window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/datenschutz";
+  }}
+>
+  Datenschutz
+</a>,{" "}
+
+<a 
+  href="#" 
+  className="text-blue-600 underline" 
+  onClick={(e) => {
+    e.preventDefault();
+    window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/impressum";
+  }}
+>
+  Impressum
+</a> und{" "}
+
+<a 
+  href="#" 
+  className="text-blue-600 underline" 
+  onClick={(e) => {
+    e.preventDefault();
+    window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/agb";
+  }}
+>
+  Allgemeinen Geschäftsbedingungen
+</a>.
   Wir verwenden Cookies, um Ihre Erfahrung zu verbessern und sichere Transaktionen zu gewährleisten.  
   Ihre Daten werden gemäß unseren Richtlinien geschützt und verarbeitet. Mit dem Fortfahren bestätigen Sie Ihr Einverständnis mit unseren Bedingungen.
 </p>
@@ -135,7 +164,15 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h2 className="text-xl font-semibold">Buchung erfolgreich</h2>
             <p className="mt-2">Ihre Buchung war erfolgreich. Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
-            <Button className="mt-4 w-full" onClick={() => setShowDialog(false)}>Schließen</Button>
+            <Button 
+  className="mt-4 w-full" 
+  onClick={() => {
+    setShowDialog(false); // Close the dialog
+    window.top.location.href = "https://www.reachly.ca/"; // Redirect
+  }}
+  >
+  Schließen
+</Button>
           </div>
         </div>
       )}
