@@ -1,6 +1,6 @@
 "use client"
 
-import { useState} from "react"
+import { useState,useEffect} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -42,7 +42,7 @@ interface ToastProps {
   type: "success" | "error" | "info"
   onClose: () => void
 }
-
+const ONE_HOUR = 60 * 60 * 1000 // 1 hour in milliseconds
 export default function BookingPage() {
   const [date, setDate] = useState<Date | undefined>()
   const [time, setTime] = useState<string | undefined>()
@@ -77,6 +77,38 @@ export default function BookingPage() {
     }
     setErrors(newErrors)
   }
+   useEffect(() => {
+    const storedData = localStorage.getItem("bookingFormData")
+    if (storedData) {
+      const { date, time, name, email, phone, message, timestamp } = JSON.parse(storedData)
+
+      // Check if the stored data is still within one hour
+      if (Date.now() - timestamp < ONE_HOUR) {
+        setDate(date ? new Date(date) : undefined)
+        setTime(time || "")
+        setName(name || "")
+        setEmail(email || "")
+        setPhone(phone || "")
+        setMessage(message || "")
+      } else {
+        localStorage.removeItem("bookingFormData") // Clear outdated data
+      }
+    }
+  }, [])
+
+  // Save data to localStorage on every change
+  useEffect(() => {
+    const formData = {
+      date: date?.toISOString() || null,
+      time,
+      name,
+      email,
+      phone,
+      message,
+      timestamp: Date.now(),
+    }
+    localStorage.setItem("bookingFormData", JSON.stringify(formData))
+  }, [date, time, name, email, phone, message])
 
   const handleNext = () => {
     setLoading(true)
@@ -149,6 +181,7 @@ export default function BookingPage() {
         formData,
       )
       if(response){
+        window.parent.postMessage({ type: "quizSubmission", data: response.data }, "*");
         console.log("response",response)
       setTimeout(() => {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success", onClose: () => setToast(null) })
