@@ -172,10 +172,12 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
             <p className="mt-2">Ihre Buchung war erfolgreich. Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
             <Button 
   className="mt-4 w-full" 
-  onClick={() => {
-    setShowDialog(false); // Close the dialog
-    window.top.location.href = "https://www.reachly.ca/"; // Redirect
-  }}
+onClick={() => {
+  setShowDialog(false); // Close the dialog
+  if (typeof window !== "undefined" && window.top) {
+    window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/"; // Redirect
+  }
+}}
   >
   Schließen
 </Button>
