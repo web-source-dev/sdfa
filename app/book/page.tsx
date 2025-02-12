@@ -182,6 +182,7 @@ export default function BookingPage() {
       )
       if(response){
         window.parent.postMessage({ type: "quizSubmission", data: response.data }, "*");
+        localStorage.removeItem("bookingFormData") // Clear outdated data
         console.log("response",response)
       setTimeout(() => {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success", onClose: () => setToast(null) })
