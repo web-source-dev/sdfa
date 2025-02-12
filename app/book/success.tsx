@@ -113,7 +113,6 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
                 <p className="mt-6 text-sm text-gray-600 text-center">
   Bevor Sie Ihre Buchung abschließen, lesen Sie bitte unsere{" "}
   <a
-  href="#"
   className="text-blue-600 underline"
   onClick={(e) => {
     e.preventDefault();
@@ -126,7 +125,6 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
 </a>
 ,{" "}
 <a
-  href="#"
   className="text-blue-600 underline"
   onClick={(e) => {
     e.preventDefault();
@@ -139,7 +137,6 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
 </a>
 ,{" "}
 <a
-  href="#"
   className="text-blue-600 underline"
   onClick={(e) => {
     e.preventDefault();
