@@ -112,34 +112,40 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
         </div>
                 <p className="mt-6 text-sm text-gray-600 text-center">
   Bevor Sie Ihre Buchung abschließen, lesen Sie bitte unsere{" "}
-                  <a 
-  href="#" 
-  className="text-blue-600 underline" 
+  <a
+  href="#"
+  className="text-blue-600 underline"
   onClick={(e) => {
     e.preventDefault();
-    window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/datenschutz";
+    if (typeof window !== "undefined" && window.top) {
+      window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/datenschutz";
+    }
   }}
 >
   Datenschutz
-</a>,{" "}
-
-<a 
-  href="#" 
-  className="text-blue-600 underline" 
+</a>
+,{" "}
+<a
+  href="#"
+  className="text-blue-600 underline"
   onClick={(e) => {
     e.preventDefault();
-    window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/impressum";
+    if (typeof window !== "undefined" && window.top) {
+      window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/impressum";
+    }
   }}
 >
   Impressum
-</a> und{" "}
-
-<a 
-  href="#" 
-  className="text-blue-600 underline" 
+</a>
+,{" "}
+<a
+  href="#"
+  className="text-blue-600 underline"
   onClick={(e) => {
     e.preventDefault();
-    window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/agb";
+    if (typeof window !== "undefined" && window.top) {
+      window.top.location.href = "https://sascharoemer.wixsite.com/my-site-4/agb";
+    }
   }}
 >
   Allgemeinen Geschäftsbedingungen
