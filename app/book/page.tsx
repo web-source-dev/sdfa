@@ -22,20 +22,21 @@ interface FormData {
   message: string
 }
 
+const timeSlotsByDay: { [key: string]: string[] } = {
+  "1": ["09:30", "11:30", "13:30"], // Monday
+  "2": ["10:00", "14:00", "17:00"], // Tuesday
+  "3": ["12:00", "12:30", "13:00"], // Wednesday
+  "4": ["09:00", "09:30", "16:00", "16:30", "18:00"], // Thursday
+  "5": ["10:00", "11:30", "13:30", "15:00"], // Friday
+  "6": [], // Saturday
+  "0": [], // Sunday
+}
+
 const timeSlots = [
-  "09:00",
-  "09:30",
-  "10:00",
-  "10:30",
-  "11:00",
-  "11:30",
-  "12:00",
-  "12:30",
-  "14:00",
-  "14:30",
-  "15:00",
-  "15:30",
-]
+  "09:00", "09:30", "10:00", "11:30", "12:00", "12:30", 
+  "13:00", "13:30", "14:00", "15:00", "16:00", "16:30", 
+  "17:00", "18:00"
+];
 
 interface ToastProps {
   message: string
@@ -65,19 +66,7 @@ export default function BookingPage() {
     const re = /^\+?[1-9]\d{1,14}$/
     return re.test(String(phone))
   }
-
-  const handleBlur = (field: string) => {
-    const newErrors = { ...errors }
-    if (field === "email" && (!email || !validateEmail(email))) {
-      newErrors.email = "Bitte geben Sie eine gültige E-Mail-Adresse ein"
-    } else if (field === "phone" && (!phone || !validatePhone(phone))) {
-      newErrors.phone = "Bitte geben Sie eine gültige Telefonnummer ein"
-    } else {
-      delete newErrors[field]
-    }
-    setErrors(newErrors)
-  }
-   useEffect(() => {
+  useEffect(() => {
     const storedData = localStorage.getItem("bookingFormData")
     if (storedData) {
       const { date, time, name, email, phone, message, timestamp } = JSON.parse(storedData)
@@ -109,6 +98,17 @@ export default function BookingPage() {
     }
     localStorage.setItem("bookingFormData", JSON.stringify(formData))
   }, [date, time, name, email, phone, message])
+  const handleBlur = (field: string) => {
+    const newErrors = { ...errors }
+    if (field === "email" && (!email || !validateEmail(email))) {
+      newErrors.email = "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+    } else if (field === "phone" && (!phone || !validatePhone(phone))) {
+      newErrors.phone = "Bitte geben Sie eine gültige Telefonnummer ein"
+    } else {
+      delete newErrors[field]
+    }
+    setErrors(newErrors)
+  }
 
   const handleNext = () => {
     setLoading(true)
@@ -148,6 +148,32 @@ export default function BookingPage() {
     }, 1000)
   }
 
+  const handleDateChange = (selectedDate: Date | undefined) => {
+    setDate(selectedDate)
+    setTime(undefined)
+    if (selectedDate) {
+      setErrors(prev => {
+        const newErrors = {...prev};
+        delete newErrors.time;
+        return newErrors;
+      });
+    }
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    
+    // Always ensure the value starts with +49
+    if (!value.startsWith('+49')) {
+      value = '+49' + value.replace('+49', '');
+    }
+    
+    // Remove any +49 that might appear later in the string
+    value = '+49' + value.slice(3).replace('+49', '');
+    
+    setPhone(value);
+  };
+
   const handleSubmit = async () => {
     const newErrors: { [key: string]: string } = {}
     if (!date) newErrors.date = "Bitte wählen Sie ein Datum"
@@ -182,7 +208,6 @@ export default function BookingPage() {
       )
       if(response){
         window.parent.postMessage({ type: "quizSubmission", data: response.data }, "*");
-        localStorage.removeItem("bookingFormData") // Clear outdated data
         console.log("response",response)
       setTimeout(() => {
         setToast({ message: "Termin erfolgreich gebucht!", type: "success", onClose: () => setToast(null) })
@@ -207,7 +232,7 @@ export default function BookingPage() {
       <div className="relative max-w-4xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle>Unverbindliches Vorgespräch mit Coach Kai</CardTitle>
+            <CardTitle>Unverbindliches Vorgespräch mit Sascha Römer</CardTitle>
             <CardDescription>Wählen Sie einen passenden Termin für Ihr kostenloses Erstgespräch</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-6">
@@ -228,7 +253,7 @@ export default function BookingPage() {
                     <Calendar
                       mode="single"
                       selected={date}
-                      onSelect={setDate}
+                      onSelect={handleDateChange}
                       disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
                     />
                   </PopoverContent>
@@ -238,18 +263,31 @@ export default function BookingPage() {
               <div>
                 <label className="text-sm font-medium mb-2 block">Uhrzeit auswählen</label>
                 <div className="grid grid-cols-3 gap-2">
-                  {timeSlots.map((slot) => (
+                  {date && timeSlotsByDay[date.getDay().toString()].map((slot) => (
                     <Button
                       key={slot}
                       variant={time === slot ? "default" : "outline"}
-                      className="w-full"
+                      className={cn(
+                        "w-full transition-all",
+                        time === slot && "bg-black text-white hover:bg-black/90"
+                      )}
                       onClick={() => setTime(slot)}
                     >
-                      <Clock className="mr-2 h-4 w-4" />
+                      <Clock className={cn("mr-2 h-4 w-4", time === slot && "text-white")} />
                       {slot}
                     </Button>
                   ))}
                 </div>
+                {!date && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Bitte wählen Sie zuerst ein Datum
+                  </p>
+                )}
+                {date && timeSlotsByDay[date.getDay().toString()].length === 0 && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Keine Termine an diesem Tag verfügbar
+                  </p>
+                )}
                 {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
               </div>
             </div>
@@ -274,10 +312,10 @@ export default function BookingPage() {
                 <label className="text-sm font-medium mb-2 block">Telefon</label>
                 <Input
                   type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={phone || '+49'}
+                  onChange={handlePhoneChange}
                   onBlur={() => handleBlur("phone")}
-                  placeholder="+49"
+                  className="font-mono"
                 />
                 {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
               </div>
@@ -292,7 +330,7 @@ export default function BookingPage() {
                 {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
               </div>
             </div>
-            <Button size="lg" className="w-full" onClick={handleNext} disabled={loading}>
+            <Button size="lg" className="w-full bg-black text-white hover:bg-black/90" onClick={handleNext} disabled={loading}>
               {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Weiter"}
             </Button>
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
@@ -302,6 +340,10 @@ export default function BookingPage() {
     </div>
   )
 }
+
+
+
+
 
 
 
