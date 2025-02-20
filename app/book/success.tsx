@@ -67,9 +67,9 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
         </div>
         <div className="flex items-center gap-2 justify-center">
           <div className="rounded-full p-1">
-            <CalendarCheck className="h-6 w-6 text-emerald-600" />
+            <CalendarCheck className="h-6 w-6 text-blue-600" />
           </div>
-          <h1 className="text-xl font-semibold text-emerald-600 text-center">Sie haben einen Termin</h1>
+          <h1 className="text-xl font-semibold text-blue-600 text-center">Sie haben einen Termin</h1>
         </div>
 
         <p className="mt-2 text-sm text-gray-600 text-center">
@@ -135,7 +135,7 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
             <h2 className="text-xl font-semibold">Buchung erfolgreich</h2>
             <p className="mt-2">Ihre Buchung war erfolgreich. Eine Bestätigung wurde an Ihre E-Mail-Adresse gesendet.</p>
             <Button 
-  className="mt-4 w-full" 
+  className="w-full mt-4 bg-black text-white hover:bg-black/90" 
 onClick={() => {
   setShowDialog(false);
   window.parent.postMessage({ type: "redirect", url: "https://sascharoemer.wixsite.com/my-site-4" }, "*");
