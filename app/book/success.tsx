@@ -78,7 +78,7 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
 
         <div className="mt-6 p-6 border border-gray-200 rounded-lg w-full">
           <h2 className="text-lg flex items-start font-semibold text-center">
-            Unverbindliches Vorgespräch mit Coach Kai
+            Unverbindliches Vorgespräch mit Sascha Römer
           </h2>
           
           <div className="mt-4 space-y-4">
@@ -120,7 +120,7 @@ export default function SuccessPage({ formData, onSubmit, onBack, toast }: { for
 </p>
         {/* Submit Button */}
         <div className="mt-6">
-          <Button className="w-full" onClick={handleSubmit} disabled={loadingSubmit}>
+          <Button className="w-full bg-black text-white hover:bg-black/90" onClick={handleSubmit} disabled={loadingSubmit}>
             {loadingSubmit ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Daten einreichen"}
           </Button>
         </div>
