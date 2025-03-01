@@ -39,8 +39,16 @@ interface ToastProps {
   onClose: () => void
 }
 const ONE_HOUR = 60 * 60 * 1000 // 1 hour in milliseconds
+const getNextMonday = () => {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+  const daysUntilMonday = dayOfWeek === 1 ? 0 : (dayOfWeek === 0 ? 1 : 8 - dayOfWeek);
+  today.setDate(today.getDate() + daysUntilMonday);
+  return today;
+};
+
 export default function BookingPage() {
-  const [date, setDate] = useState<Date | undefined>()
+const [date, setDate] = useState<Date | undefined>(getNextMonday());
   const [time, setTime] = useState<string | undefined>()
   const [name, setName] = useState<string>("")
   const [email, setEmail] = useState<string>("")
